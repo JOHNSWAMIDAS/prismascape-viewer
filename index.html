@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PRISMASCAPE Viewer</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; }
+    #info {
+      position: absolute; top: 10px; left: 10px; color: white;
+      z-index: 1; background: rgba(0,0,0,0.6); padding: 10px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <div id="info">PRISMASCAPE Viewer<br><small>Loading .space geometry...</small></div>
+  <script type="module">
+    import * as THREE from 'https://cdn.skypack.dev/three@0.150.0';
+    import { OrbitControls } from 'https://cdn.skypack.dev/three/examples/jsm/controls/OrbitControls.js';
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    camera.position.set(5, 5, 10);
+    controls.update();
+
+    scene.add(new THREE.AmbientLight(0x404040));
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+    dirLight.position.set(10, 10, 10);
+    scene.add(dirLight);
+
+    async function loadSpaceData() {
+      const res = await fetch('sample.space');
+      const data = await res.json();
+      data.storeys.forEach(storey => {
+        storey.structural_members.forEach(el => {
+          if (el.type === 'wall') {
+            const len = Math.hypot(el.end[0] - el.start[0], el.end[1] - el.start[1]);
+            const geometry = new THREE.BoxGeometry(len, el.height || 2.5, 0.2);
+            const material = new THREE.MeshStandardMaterial({ color: 0x999999 });
+            const mesh = new THREE.Mesh(geometry, material);
+            const angle = Math.atan2(el.end[1] - el.start[1], el.end[0] - el.start[0]);
+            mesh.position.set((el.start[0] + el.end[0]) / 2, (el.height || 2.5) / 2, (el.start[1] + el.end[1]) / 2);
+            mesh.rotation.y = -angle;
+            scene.add(mesh);
+          }
+        });
+      });
+    }
+
+    loadSpaceData();
+
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    animate();
+  </script>
+</body>
+</html>

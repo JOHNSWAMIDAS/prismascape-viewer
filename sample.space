@@ -1,0 +1,14 @@
+{
+  "storeys": [
+    {
+      "id": "storey_0",
+      "elevation": 0,
+      "structural_members": [
+        { "type": "wall", "start": [0, 0], "end": [4, 0], "height": 2.5 },
+        { "type": "wall", "start": [4, 0], "end": [4, 3], "height": 2.5 },
+        { "type": "wall", "start": [4, 3], "end": [0, 3], "height": 2.5 },
+        { "type": "wall", "start": [0, 3], "end": [0, 0], "height": 2.5 }
+      ]
+    }
+  ]
+}
