@@ -36,7 +36,7 @@
     scene.add(dirLight);
 
     async function loadSpaceData() {
-      const res = await fetch('sample.space');
+      const res = await fetch('sample.json');
       const data = await res.json();
       data.storeys.forEach(storey => {
         storey.structural_members.forEach(el => {
