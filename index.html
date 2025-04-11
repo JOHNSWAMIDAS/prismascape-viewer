@@ -17,8 +17,8 @@
 <body>
   <div id="info">PRISMASCAPE Viewer<br><small>Loading .space geometry...</small></div>
   <script type="module">
-    import * as THREE from 'https://cdn.skypack.dev/three@0.150.0';
-    import { OrbitControls } from 'https://cdn.skypack.dev/three/examples/jsm/controls/OrbitControls.js';
+    import * as THREE from './js/three.module.js';
+    import { OrbitControls } from './js/OrbitControls.js';
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
